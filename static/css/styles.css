@@ -1,0 +1,18 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+#outfit-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+.outfit {
+    cursor: pointer;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+.outfit:hover {
+    border-color: #000;
+}

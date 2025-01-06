@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Fashion Simulator</h1>
+    <div>
+        <h2>Avatar</h2>
+        <img id="avatar" src="{{ url_for('static', filename='images/avatar-base.png') }}" alt="Avatar" width="200">
+        <img id="outfit-overlay" src="" alt="Outfit" width="200" style="position: absolute; top: 0; left: 0;">
+    </div>
+    <div>
+        <h2>Outfits</h2>
+        <div id="outfit-gallery">
+            {% for outfit in outfits %}
+                <img src="{{ outfit.image }}" alt="{{ outfit.name }}" class="outfit" data-outfit="{{ outfit.image }}" width="100">
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        const outfitOverlay = document.getElementById("outfit-overlay");
+        const outfitImages = document.querySelectorAll(".outfit");
+
+        outfitImages.forEach((img) => {
+            img.addEventListener("click", () => {
+                const outfitImage = img.getAttribute("data-outfit");
+                outfitOverlay.src = outfitImage;
+            });
+        });
+    </script>
+</body>
+</html>
