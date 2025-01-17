@@ -5,22 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fashion Simulator</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Fashion Simulator</h1>
-    <div>
-        <h2>Avatar</h2>
-        <img id="avatar" src="{{ url_for('static', filename='images/avatar-base.png') }}" alt="Avatar" width="200">
-        <img id="outfit-overlay" src="" alt="Outfit" width="200" style="position: absolute; top: 0; left: 0;">
-    </div>
-    <div>
-        <h2>Outfits</h2>
-        <div id="outfit-gallery">
-            {% for outfit in outfits %}
-                <img src="{{ outfit.image }}" alt="{{ outfit.name }}" class="outfit" data-outfit="{{ outfit.image }}" width="100">
-            {% endfor %}
-        </div>
-    </div>
+    <header class="header">
+        <h1>Fashion Simulator</h1>
+    </header>
+
+    <main>
+        <section class="avatar-section">
+            <div class="avatar-container">
+                <img id="avatar" src="{{ url_for('static', filename='images/avatar-base.png') }}" alt="Avatar">
+                <img id="outfit-overlay" src="" alt="Outfit">
+            </div>
+        </section>
+
+        <section class="outfit-gallery-section">
+            <h2>Choose Your Outfit</h2>
+            <div id="outfit-gallery" class="gallery">
+                {% for outfit in outfits %}
+                    <div class="gallery-item">
+                        <img src="{{ outfit.image }}" alt="{{ outfit.name }}" class="outfit" data-outfit="{{ outfit.image }}">
+                        <p class="outfit-name">{{ outfit.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Fashion Simulator. All rights reserved.</p>
+    </footer>
 
     <script>
         const outfitOverlay = document.getElementById("outfit-overlay");
