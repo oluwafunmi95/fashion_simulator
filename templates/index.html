@@ -4,48 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fashion Simulator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
-    <header class="header">
-        <h1>Fashion Simulator</h1>
-    </header>
+    <h1>Fashion Simulator</h1>
 
-    <main>
-        <section class="avatar-section">
-            <div class="avatar-container">
-                <img id="avatar" src="{{ url_for('static', filename='images/avatar-base.png') }}" alt="Avatar">
-                <img id="outfit-overlay" src="" alt="Outfit">
-            </div>
-        </section>
+    <!-- Category Navigation -->
+    <div id="category-nav">
+        <button class="category active" data-category="tops">Tops</button>
+        <button class="category" data-category="bottoms">Bottoms</button>
+        <button class="category" data-category="dresses">Dresses</button>
+        <button class="category" data-category="accessories">Accessories</button>
+    </div>
 
-        <section class="outfit-gallery-section">
-            <h2>Choose Your Outfit</h2>
-            <div id="outfit-gallery" class="gallery">
-                {% for outfit in outfits %}
-                    <div class="gallery-item">
-                        <img src="{{ outfit.image }}" alt="{{ outfit.name }}" class="outfit" data-outfit="{{ outfit.image }}">
-                        <p class="outfit-name">{{ outfit.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </section>
-    </main>
+    <!-- Avatar Section -->
+    <div class="avatar-container">
+        <img id="avatar" src="static/images/avatar-base.png" alt="Avatar">
+        <img id="top-overlay" class="avatar-overlay hidden" src="" alt="Top Overlay">
+        <img id="bottom-overlay" class="avatar-overlay hidden" src="" alt="Bottom Overlay">
+        <img id="dress-overlay" class="avatar-overlay hidden" src="" alt="Dress Overlay">
+        <img id="accessory-overlay" class="avatar-overlay hidden" src="" alt="Accessory Overlay">
+    </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 Fashion Simulator. All rights reserved.</p>
-    </footer>
+    <!-- Outfit Gallery -->
+    <div id="outfit-gallery">
+        <!-- Tops -->
+        <img src="static/images/top1.png" alt="Top 1" class="outfit" data-category="tops" data-overlay="top-overlay">
+        <img src="static/images/top2.png" alt="Top 2" class="outfit" data-category="tops" data-overlay="top-overlay">
+
+        <!-- Bottoms -->
+        <img src="static/images/bottom1.png" alt="Bottom 1" class="outfit hidden" data-category="bottoms" data-overlay="bottom-overlay">
+        <img src="static/images/bottom2.png" alt="Bottom 2" class="outfit hidden" data-category="bottoms" data-overlay="bottom-overlay">
+      
+        <!-- Dresses -->
+        <img src="static/images/red-dress.png" alt="Red Dress" class="outfit hidden" data-category="dresses" data-overlay="dress-overlay">
+        <img src="static/images/blue-dress.png" alt="Blue Dress" class="outfit hidden" data-category="dresses" data-overlay="dress-overlay">
+        <img src="static/images/yellow-dress.png" alt="Yellow Dress" class="outfit hidden" data-category="dresses" data-overlay="dress-overlay">
+
+        <!-- Accessories -->
+        <img src="static/images/hat1.png" alt="Hat 1" class="outfit hidden" data-category="accessories" data-overlay="accessory-overlay">
+        <img src="static/images/hat2.png" alt="Hat 2" class="outfit hidden" data-category="accessories" data-overlay="accessory-overlay">
+    </div>
 
     <script>
-        const outfitOverlay = document.getElementById("outfit-overlay");
-        const outfitImages = document.querySelectorAll(".outfit");
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize overlay elements
+            const overlays = {
+                tops: document.getElementById('top-overlay'),
+                bottoms: document.getElementById('bottom-overlay'),
+                dresses: document.getElementById('dress-overlay'),
+                accessories: document.getElementById('accessory-overlay')
+            };
 
-        outfitImages.forEach((img) => {
-            img.addEventListener("click", () => {
-                const outfitImage = img.getAttribute("data-outfit");
-                outfitOverlay.src = outfitImage;
+            // Initialize current selections
+            const currentSelection = {
+                tops: '',
+                bottoms: '',
+                dresses: '',
+                accessories: ''
+            };
+
+            // Show/hide outfits based on category
+            function showCategory(categoryName) {
+                document.querySelectorAll('.outfit').forEach(outfit => {
+                    if (outfit.dataset.category === categoryName) {
+                        outfit.classList.remove('hidden');
+                    } else {
+                        outfit.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Handle category button clicks
+            document.querySelectorAll('.category').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelector('.category.active')?.classList.remove('active');
+                    this.classList.add('active');
+
+                    // Show appropriate outfits
+                    const category = this.dataset.category;
+                    showCategory(category);
+                });
             });
+
+            // Handle outfit clicks
+            document.querySelectorAll('.outfit').forEach(outfit => {
+                outfit.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const overlay = overlays[category];
+                    
+                    if (!overlay) return;
+
+                    // Update current selection
+                    currentSelection[category] = this.src;
+                    
+                    // Update overlay
+                    overlay.src = this.src;
+                    overlay.classList.remove('hidden');
+
+                    // Special handling for dresses
+                    if (category === 'dresses') {
+                        // Hide tops and bottoms
+                        overlays.tops.classList.add('hidden');
+                        overlays.bottoms.classList.add('hidden');
+                        currentSelection.tops = '';
+                        currentSelection.bottoms = '';
+                    } else if (category === 'tops' || category === 'bottoms') {
+                        // Hide dress
+                        overlays.dresses.classList.add('hidden');
+                        currentSelection.dresses = '';
+                    }
+
+                    // Always show accessories
+                    if (currentSelection.accessories) {
+                        overlays.accessories.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Show initial category (tops)
+            showCategory('tops');
         });
     </script>
 </body>
