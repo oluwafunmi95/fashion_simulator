@@ -1,91 +1,171 @@
-/* General Styling */
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+/* Base styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    box-sizing: border-box;
 }
 
-/* Title */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
 h1 {
-    margin-top: 20px;
-    font-size: 2em;
+    text-align: center;
     color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5rem;
 }
 
 /* Category Navigation */
 #category-nav {
-    margin: 20px 0;
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .category {
     padding: 10px 20px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
+    border: none;
+    border-radius: 25px;
+    background-color: #e0e0e0;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1rem;
     transition: all 0.3s ease;
 }
 
 .category:hover {
-    background-color: #f0f0f0;
+    background-color: #d0d0d0;
 }
 
 .category.active {
-    border-color: #007bff;
-    background-color: #e9f4ff;
-    color: #007bff;
+    background-color: #4CAF50;
+    color: white;
 }
 
-/* Avatar Section */
+/* Avatar Container */
 .avatar-container {
     position: relative;
-    width: 200px;
-    height: 300px;
-    margin: 0 auto 20px;
+    width: 300px;
+    height: 500px;
+    margin: 0 auto 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-#avatar {
-    width: 100%;
-    height: auto;
-}
-
+#avatar,
 .avatar-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: auto;
-    pointer-events: none;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Outfit Gallery */
 #outfit-gallery {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .outfit {
-    width: 80px;
-    height: auto;
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
     cursor: pointer;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
 }
 
 .outfit:hover {
-    border-color: #000;
+    transform: scale(1.05);
 }
 
 .hidden {
     display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .category {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .avatar-container {
+        width: 250px;
+        height: 400px;
+    }
+
+    #outfit-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .outfit {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    #category-nav {
+        gap: 8px;
+    }
+
+    .category {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .avatar-container {
+        width: 200px;
+        height: 350px;
+    }
+
+    #outfit-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .outfit {
+        height: 140px;
+    }
+}
+
+/* Animation for outfit changes */
+.avatar-overlay {
+    transition: opacity 0.3s ease;
+}
+
+.avatar-overlay.hidden {
+    opacity: 0;
 }
