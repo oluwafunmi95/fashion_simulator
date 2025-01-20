@@ -48,106 +48,112 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let currentCategory = 'tops';
+    let currentCategory = 'tops';
+    
+    // Initialize current selections for each category
+    const selectedItems = {
+        tops: null,
+        bottoms: null,
+        dresses: null,
+        accessories: null
+    };
+
+    // Function to reset all overlays to hidden
+    function resetOverlays() {
+        const topOverlay = document.getElementById('top-overlay');
+        const bottomOverlay = document.getElementById('bottom-overlay');
+        const dressOverlay = document.getElementById('dress-overlay');
+        const accessoryOverlay = document.getElementById('accessory-overlay');
+
+        // Hide all overlays
+        [topOverlay, bottomOverlay, dressOverlay, accessoryOverlay].forEach(overlay => {
+            overlay.classList.add('hidden');
+            overlay.src = ''; // Clear the image source
+        });
+    }
+
+    // Function to update overlay visibility and content
+    function updateOverlays() {
+        const topOverlay = document.getElementById('top-overlay');
+        const bottomOverlay = document.getElementById('bottom-overlay');
+        const dressOverlay = document.getElementById('dress-overlay');
+        const accessoryOverlay = document.getElementById('accessory-overlay');
+
+        // Reset all overlays to hidden first
+        resetOverlays();
+
+        // Show selected items
+        if (selectedItems.dresses) {
+            dressOverlay.src = selectedItems.dresses;
+            dressOverlay.classList.remove('hidden');
+        } else {
+            // Show tops and bottoms if selected
+            if (selectedItems.tops) {
+                topOverlay.src = selectedItems.tops;
+                topOverlay.classList.remove('hidden');
+            }
+            if (selectedItems.bottoms) {
+                bottomOverlay.src = selectedItems.bottoms;
+                bottomOverlay.classList.remove('hidden');
+            }
+        }
+
+        // Always show accessories if selected
+        if (selectedItems.accessories) {
+            accessoryOverlay.src = selectedItems.accessories;
+            accessoryOverlay.classList.remove('hidden');
+        }
+    }
+
+    // Handle category switching
+    document.querySelectorAll('.category').forEach(button => {
+        button.addEventListener('click', function() {
+            // Update active button
+            document.querySelector('.category.active').classList.remove('active');
+            this.classList.add('active');
             
-            // Initialize current selections for each category
-            const selectedItems = {
-                tops: null,
-                bottoms: null,
-                dresses: null,
-                accessories: null
-            };
+            // Update current category
+            currentCategory = this.dataset.category;
 
-            // Function to update overlay visibility and content
-            function updateOverlays() {
-                const topOverlay = document.getElementById('top-overlay');
-                const bottomOverlay = document.getElementById('bottom-overlay');
-                const dressOverlay = document.getElementById('dress-overlay');
-                const accessoryOverlay = document.getElementById('accessory-overlay');
+            // Show/hide outfits based on category
+            document.querySelectorAll('.outfit').forEach(outfit => {
+                outfit.classList.toggle('hidden', outfit.dataset.category !== currentCategory);
+            });
 
-                // Reset all overlays to hidden first
-                [topOverlay, bottomOverlay, dressOverlay, accessoryOverlay].forEach(overlay => {
-                    overlay.classList.add('hidden');
-                });
+            // Reset all selections and overlays when switching categories
+            selectedItems.tops = null;
+            selectedItems.bottoms = null;
+            selectedItems.dresses = null;
+            selectedItems.accessories = null;
+            resetOverlays();
+        });
+    });
 
-                // Show selected items
-                if (selectedItems.dresses) {
-                    dressOverlay.src = selectedItems.dresses;
-                    dressOverlay.classList.remove('hidden');
-                    // Hide tops and bottoms when dress is selected
-                    selectedItems.tops = null;
-                    selectedItems.bottoms = null;
-                } else {
-                    // Show tops and bottoms if selected
-                    if (selectedItems.tops) {
-                        topOverlay.src = selectedItems.tops;
-                        topOverlay.classList.remove('hidden');
-                    }
-                    if (selectedItems.bottoms) {
-                        bottomOverlay.src = selectedItems.bottoms;
-                        bottomOverlay.classList.remove('hidden');
-                    }
-                }
+    // Handle outfit selection
+    document.querySelectorAll('.outfit').forEach(outfit => {
+        outfit.addEventListener('click', function() {
+            const category = this.dataset.category;
+            
+            // Update selection for the current category
+            selectedItems[category] = this.src;
 
-                // Always show accessories if selected
-                if (selectedItems.accessories) {
-                    accessoryOverlay.src = selectedItems.accessories;
-                    accessoryOverlay.classList.remove('hidden');
-                }
+            // Handle dress vs tops/bottoms conflict
+            if (category === 'dresses') {
+                selectedItems.tops = null;
+                selectedItems.bottoms = null;
+            } else if (category === 'tops' || category === 'bottoms') {
+                selectedItems.dresses = null;
             }
 
-            // Handle category switching
-            document.querySelectorAll('.category').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Update active button
-                    document.querySelector('.category.active').classList.remove('active');
-                    this.classList.add('active');
-                    
-                    // Update current category
-                    currentCategory = this.dataset.category;
-
-                    // Show/hide outfits based on category
-                    document.querySelectorAll('.outfit').forEach(outfit => {
-                        outfit.classList.toggle('hidden', outfit.dataset.category !== currentCategory);
-                    });
-
-                    // If switching to dresses, hide tops and bottoms
-                    if (currentCategory === 'dresses') {
-                        selectedItems.tops = null;
-                        selectedItems.bottoms = null;
-                    } else if (currentCategory === 'tops' || currentCategory === 'bottoms') {
-                        selectedItems.dresses = null;
-                    }
-
-                    updateOverlays();
-                });
-            });
-
-            // Handle outfit selection
-            document.querySelectorAll('.outfit').forEach(outfit => {
-                outfit.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    
-                    // Update selection for the current category
-                    selectedItems[category] = this.src;
-
-                    // Handle dress vs tops/bottoms conflict
-                    if (category === 'dresses') {
-                        selectedItems.tops = null;
-                        selectedItems.bottoms = null;
-                    } else if (category === 'tops' || category === 'bottoms') {
-                        selectedItems.dresses = null;
-                    }
-
-                    updateOverlays();
-                });
-            });
-
-            // Show initial category items
-            document.querySelectorAll('.outfit[data-category="tops"]').forEach(outfit => {
-                outfit.classList.remove('hidden');
-            });
+            updateOverlays();
         });
+    });
+
+    // Show initial category items
+    document.querySelectorAll('.outfit[data-category="tops"]').forEach(outfit => {
+        outfit.classList.remove('hidden');
+    });
+});
     </script>
 </body>
 </html>
